@@ -14,7 +14,7 @@ public class Administracion {
     }
     
     private final String administrador;
-    Collection<Registro> listaRegistros;
+    Collection<Registro> listaRegistros; //Esta coleccion incluye el historico de vehiculos parqueados, por lo cual no se le pueden eliminar elementos
     public final Parqueadero parqueadero;
 
     

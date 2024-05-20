@@ -58,6 +58,44 @@ public class AdministracionTest {
     public void testGenerarReporteMensual() {
         LOG.info("Iniciado test");
 
+        Tarifa tarifa = new Tarifa(5.0, 7.0, 10.0);
+        Parqueadero parqueadero = new Parqueadero("Parqueadero Central", 10, tarifa);
+        Administracion administracion = new Administracion("Admin", parqueadero);
+        parqueadero.setAdministracion(administracion);
+
+        // Crear propietarios y vehículos
+        Propietario propietario1 = new Propietario("Juan", "Perez");
+        Propietario propietario2 = new Propietario("Ana", "Gomez");
+        Propietario propietario3 = new Propietario("Luis", "Martinez");
+
+        Vehiculo motoClasica = new MotoClasica("ABC123", "ModeloX", propietario1,99.9);
+        Vehiculo motoHibrida = new MotoHibrida("DEF456", "ModeloY", propietario2,98.66);
+        Vehiculo carro = new Carro("GHI789", "ModeloZ", propietario3);
+
+        // Crear registros de ingreso
+        LocalDateTime inicioMes = LocalDateTime.of(2024, 5, 1, 8, 0);
+        LocalDateTime finMes = LocalDateTime.of(2024, 5, 31, 18, 0);
+
+        Registro registroMotoClasica = new Registro(inicioMes, finMes, motoClasica);
+        Registro registroMotoHibrida = new Registro(inicioMes, finMes, motoHibrida);
+        Registro registroCarro = new Registro(inicioMes, finMes, carro);
+
+        // Agregar registros a la administración
+        administracion.agregarRegistro(registroMotoClasica);
+        administracion.agregarRegistro(registroMotoHibrida);
+        administracion.agregarRegistro(registroCarro);
+
+        // Calcular el recaudo mensual
+        double recaudoMensual = administracion.generarReporteMensual(5, 2024);
+
+        // Calcular el recaudo esperado
+        double expectedRecaudo = (tarifa.calcularCostoEstacionamientoMotoClasica(registroMotoClasica) + 
+                                   tarifa.calcularCostoEstacionamientoMotoHibrida(registroMotoHibrida) + 
+                                   tarifa.calcularCostoEstacionamientoCarro(registroCarro));
+
+        // Verificar que el recaudo mensual sea el esperado
+        assertEquals(expectedRecaudo, recaudoMensual, 0.001);
+
 
 
         LOG.info("Finalizando test");

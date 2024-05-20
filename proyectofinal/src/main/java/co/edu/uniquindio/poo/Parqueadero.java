@@ -10,7 +10,7 @@ public class Parqueadero {
     private final String nombre;
     public int numeroPuestos;
     static Puesto[][] puestos;
-    public Collection<Vehiculo> listaVehiculos;
+    public Collection<Vehiculo> listaVehiculos; //Esta coleccion solo incluye los vehiculos parqueados ACTUALMENTE
     public Tarifa tarifa;
     private Administracion administracion;
 
@@ -87,6 +87,32 @@ public class Parqueadero {
             
             administracion.agregarRegistro(registro);
 
+            return true;
+        }
+        return false;
+    }
+
+    //Metodo para deshubicar un vehiculo, asegurando que el vehiculo salga del parqueadero y se actualicen los datos
+    //Registrando la hora de salida, actualizando el estado del puesto
+
+    public boolean desubicarVehiculo(Puesto puesto) {
+        if (puesto.estaOcupado()) {
+            Vehiculo vehiculo = puesto.getVehiculo();
+    
+            puesto.desocuparPuesto();
+            puesto.setOcupado(false);
+            listaVehiculos.remove(vehiculo);
+    
+            // buscar el registro correspondiente al vehículo para actualizar la hora de salida
+            for (Registro registro : administracion.getListaRegistros()) {
+                if (registro.getVehiculoRegistrado().equals(vehiculo) && registro.getRegistroSalida() == null) {
+                    registro.registrarHoraSalida();
+                    break;
+                }
+            }
+    
+            actualizarPuestoEnMatriz(puesto);
+    
             return true;
         }
         return false;

@@ -133,13 +133,27 @@ public class ParqueaderoTest {
         LOG.info("Finalizando test");
     }
 
+    @Test
+    public void testDesubicarVehiculo_PuestoVacio() {
 
+        LOG.info("Iniciado test");
+
+        //  configuración inicial
+        Tarifa tarifa = new Tarifa(5.0, 7.0, 10.0);
+        Parqueadero parqueadero = new Parqueadero("Parqueadero Central", 10, tarifa);
+        parqueadero.crearPuestos(10);
+        Administracion administracion = new Administracion("Admin", parqueadero);
+        parqueadero.setAdministracion(administracion);
+
+        //  rear un puesto vacío
+        Puesto puestoVacio = parqueadero.getPuestos()[1][1];
+
+        // desubicar un vehículo de un puesto vacío
+        boolean desubicado = parqueadero.desubicarVehiculo(puestoVacio);
+
+        // verificar que el método devuelve false
+        assertFalse(desubicado);
+
+        LOG.info("Finalizando test");
+    }
 }
-     
-
-
-
-     
- 
-    
-
