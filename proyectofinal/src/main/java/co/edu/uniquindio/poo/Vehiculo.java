@@ -8,7 +8,6 @@ public abstract class Vehiculo {
     public final String placa;
     public final String modelo;
     public final Propietario propietario;
-    public Puesto puesto;
 
     
     public Vehiculo(String placa, String modelo, Propietario propietario) {
