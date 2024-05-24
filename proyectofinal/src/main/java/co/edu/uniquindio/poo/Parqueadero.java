@@ -11,15 +11,16 @@ public class Parqueadero {
     public int numeroPuestos;
     static Puesto[][] puestos;
     public Collection<Vehiculo> listaVehiculos; //Esta coleccion solo incluye los vehiculos parqueados ACTUALMENTE
-    public Tarifa tarifa;
+    public TarifaParqueadero tarifa;
     private Administracion administracion;
 
 
-    public Parqueadero(String nombre, int numeroPuestos, Tarifa tarifa) {
+    public Parqueadero(String nombre, int numeroPuestos, TarifaParqueadero tarifa) {
         this.nombre = nombre;
         this.numeroPuestos = numeroPuestos;
         this.listaVehiculos = new LinkedList<>();
         this.administracion = new Administracion("",this);
+        this.tarifa = tarifa;
     
     }
 
@@ -50,6 +51,39 @@ public class Parqueadero {
         return puestos;
     }
 
+    //Metodo para verificar si un vehiculo ya existe en la lista de vehiculos, es decir si ya se 
+    //encuentra parqueado o no existe en el parqueadero
+
+    public boolean verificarVehiculoExiste(Vehiculo vehiculo) {
+        for (Vehiculo v : listaVehiculos) {
+            if (v.equals(vehiculo)) {
+                return true;
+            }
+        }
+        return false; //true si el vehiculo existe en la lista, false en caso contrario
+    }
+
+    //Metodo para agregar un vehiculo a la lista de vehiculos parqueados actualmente,
+    //verificando si ya existe en la lista
+
+    public boolean agregarVehiculo(Vehiculo vehiculo) {
+        if (!verificarVehiculoExiste(vehiculo)) {
+            listaVehiculos.add(vehiculo);
+            return true;
+        }
+        return false; //true si el vehiculo se agrega correctamente, false en caso contrario
+    }
+
+    //Metodo para eliminar un vehiculo de la lista actual de vehiculos parqueados
+    //verificando si existe en la lista
+
+    public boolean eliminarVehiculo (Vehiculo vehiculo){
+        if (!verificarVehiculoExiste(vehiculo)) {
+            listaVehiculos.remove(vehiculo);
+            return true;
+        }
+        return false; //true si el vehiculo se elimina correctamente, false en caso contrario
+    }
     //Metodo para crear el numero de puestos, vacios y con su estado de ocupado false
 
     public void crearPuestos(int numeroPuestos) {
@@ -73,49 +107,51 @@ public class Parqueadero {
 
     //Metodo para ubicar un vehiculo en un puesto verificando si este esta disponible, 
     //asi dando las referencias del puesto y vehiculo en cada uno de ellos
+    //resumen: metodo para parquear
 
     public boolean ubicarVehiculo(Vehiculo vehiculo, Puesto puesto) {
-        if (verificarDisponibilidadPuesto(puesto) && !puesto.estaOcupado()) {
+        if (verificarDisponibilidadPuesto(puesto) && !puesto.estaOcupado() && !verificarVehiculoExiste(vehiculo)) {
 
             puesto.ocuparPuesto(vehiculo);
             puesto.setOcupado(true);
-            listaVehiculos.add(vehiculo);
+            agregarVehiculo(vehiculo);
 
             actualizarPuestoEnMatriz(puesto);
 
-            Registro registro = new Registro(LocalDateTime.now(), null, vehiculo);
+            RegistroParqueadero registro = new RegistroParqueadero(LocalDateTime.now(), null, vehiculo);
             
             administracion.agregarRegistro(registro);
 
             return true;
         }
-        return false;
+        return false; // true si el vehiculo cumple las condiciones y se ubica correctamente, false en caso contrario
     }
 
-    //Metodo para deshubicar un vehiculo, asegurando que el vehiculo salga del parqueadero y se actualicen los datos
+    //Metodo para retirar un vehiculo, asegurando que el vehiculo salga del parqueadero y se actualicen los datos
     //Registrando la hora de salida, actualizando el estado del puesto
 
-    public boolean desubicarVehiculo(Puesto puesto) {
+    public boolean retirarVehiculo(Puesto puesto) {
         if (puesto.estaOcupado()) {
+            
             Vehiculo vehiculo = puesto.getVehiculo();
     
             puesto.desocuparPuesto();
             puesto.setOcupado(false);
-            listaVehiculos.remove(vehiculo);
+            eliminarVehiculo(vehiculo);
     
             // buscar el registro correspondiente al vehículo para actualizar la hora de salida
-            for (Registro registro : administracion.getListaRegistros()) {
+            for (RegistroParqueadero registro : administracion.getListaRegistros()) {
                 if (registro.getVehiculoRegistrado().equals(vehiculo) && registro.getRegistroSalida() == null) {
                     registro.registrarHoraSalida();
-                    break;
+                    actualizarPuestoEnMatriz(puesto);
+                    return true;
+                    
                 }
             }
     
-            actualizarPuestoEnMatriz(puesto);
-    
-            return true;
         }
         return false;
+
     }
 
     //Metodo para obtener el propietario de un vehiculo, segun un determinado puesto donde se encuentra ubicado
@@ -133,17 +169,17 @@ public class Parqueadero {
         return null;
     }
 
-    //Metodo para verificar que la posicion en i,j existe
+    //Metodo para verificar que la posicion en i,j existe, verificar si este existe en el arreglo
 
     private boolean verificarPuestoExiste(int i, int j) {
             return i >= 0 && i < puestos.length && j >= 0 && j < puestos[0].length;
         }
 
-    public Tarifa getTarifa() {
+    public TarifaParqueadero getTarifa() {
         return tarifa;
     }
 
-    public void setTarifa(Tarifa tarifa) {
+    public void setTarifa(TarifaParqueadero tarifa) {
         this.tarifa = tarifa;
     }
 
@@ -156,6 +192,7 @@ public class Parqueadero {
     }
 
     //Metodo para actualizar el atributo puestos con el puesto que se instancie
+    //ya sea para desocupar u ocupar esa posicion en la matriz
 
     public static void actualizarPuestoEnMatriz(Puesto puesto) {
         Point posicion = puesto.getPosicion();

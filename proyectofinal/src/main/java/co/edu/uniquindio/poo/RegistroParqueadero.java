@@ -3,13 +3,13 @@ package co.edu.uniquindio.poo;
 import java.time.LocalDateTime;
 import java.time.Duration;
 
-public class Registro {
+public class RegistroParqueadero {
 
     public LocalDateTime registroIngreso;
     public LocalDateTime registroSalida;
     public Vehiculo vehiculoRegistrado;
     
-    public Registro(LocalDateTime registroIngreso, LocalDateTime registroSalida, Vehiculo vehiculoRegistrado) {
+    public RegistroParqueadero(LocalDateTime registroIngreso, LocalDateTime registroSalida, Vehiculo vehiculoRegistrado) {
         this.registroIngreso = registroIngreso;
         this.registroSalida = registroSalida;
         this.vehiculoRegistrado = vehiculoRegistrado;

@@ -14,7 +14,7 @@ public class Administracion {
     }
     
     private final String administrador;
-    Collection<Registro> listaRegistros; //Esta coleccion incluye el historico de vehiculos parqueados, por lo cual no se le pueden eliminar elementos
+    Collection<RegistroParqueadero> listaRegistros; //Esta coleccion incluye el historico de vehiculos parqueados, por lo cual no se le pueden eliminar elementos
     public final Parqueadero parqueadero;
 
     
@@ -23,12 +23,12 @@ public class Administracion {
     }
 
 
-    public Collection<Registro> getListaRegistros() {
+    public Collection<RegistroParqueadero> getListaRegistros() {
         return listaRegistros;
     }
 
 
-    public void setListaRegistros(Collection<Registro> listaRegistros) {
+    public void setListaRegistros(Collection<RegistroParqueadero> listaRegistros) {
         this.listaRegistros = listaRegistros;
     }
 
@@ -59,19 +59,19 @@ public class Administracion {
 
     public double[] generarReporteDiario(LocalDateTime fecha) {
         double[] reporteDiario = new double[3]; // organizacion de datos en el arreglo: 0 - MotoClasica, 1 - MotoHibrida, 2 - Carro
-        Tarifa tarifa = parqueadero.getTarifa();
+        TarifaParqueadero tarifa = parqueadero.getTarifa();
 
-        for (Registro registro : listaRegistros) {
+        for (RegistroParqueadero registro : listaRegistros) {
             // Verificar si el registro corresponde a la fecha especificada
             LocalDate fechaRegistro = registro.getRegistroIngreso().toLocalDate();
-            if (fechaRegistro.equals(fecha)) {
+            if (fechaRegistro.equals(fecha.toLocalDate())) {
                 // Calcular costo de estacionamiento para este registro
                 if (registro.getVehiculoRegistrado() instanceof MotoClasica) {
-                    reporteDiario[0] += tarifa.calcularCostoEstacionamientoMotoClasica(registro);
+                    reporteDiario[0] += tarifa.calcularCostoTotalEstacionamiento(registro);
                 } else if (registro.getVehiculoRegistrado() instanceof MotoHibrida) {
-                    reporteDiario[1] += tarifa.calcularCostoEstacionamientoMotoHibrida(registro);
+                    reporteDiario[1] += tarifa.calcularCostoTotalEstacionamiento(registro);
                 } else if (registro.getVehiculoRegistrado() instanceof Carro) {
-                    reporteDiario[2] += tarifa.calcularCostoEstacionamientoCarro(registro);
+                    reporteDiario[2] += tarifa.calcularCostoTotalEstacionamiento(registro);
                 }
             }
         }
@@ -86,15 +86,15 @@ public class Administracion {
     public double generarReporteMensual(int mes, int año) {
         double RecaudoMensual = 0.0;
 
-        for (Registro registro : listaRegistros) {
+        for (RegistroParqueadero registro : listaRegistros) {
             LocalDate fechaRegistro = registro.getRegistroIngreso().toLocalDate();
             if (fechaRegistro.getMonthValue() == mes && fechaRegistro.getYear() == año) {
                 if (registro.getVehiculoRegistrado() instanceof MotoClasica) {
-                    RecaudoMensual += parqueadero.tarifa.calcularCostoEstacionamientoMotoClasica(registro);
+                    RecaudoMensual += parqueadero.tarifa.calcularCostoTotalEstacionamiento(registro);
                 } else if (registro.getVehiculoRegistrado() instanceof MotoHibrida) {
-                    RecaudoMensual += parqueadero.tarifa.calcularCostoEstacionamientoMotoHibrida(registro);
+                    RecaudoMensual += parqueadero.tarifa.calcularCostoTotalEstacionamiento(registro);
                 } else if (registro.getVehiculoRegistrado() instanceof Carro) {
-                    RecaudoMensual += parqueadero.tarifa.calcularCostoEstacionamientoCarro(registro);
+                    RecaudoMensual += parqueadero.tarifa.calcularCostoTotalEstacionamiento(registro);
                 }
             }
         }
@@ -102,7 +102,7 @@ public class Administracion {
         return RecaudoMensual;
     }
 
-    public void agregarRegistro(Registro registro) {
+    public void agregarRegistro(RegistroParqueadero registro) {
         listaRegistros.add(registro);
 
     }

@@ -1,6 +1,9 @@
 package co.edu.uniquindio.poo;
 
-public class Vehiculo {
+//ya que es posible tener una clase abstracta aunque no tenga metodos abstractos,
+//pponemos vehiculo abstracta para que no se instancie un vehiculo, sino una moto hibrida, clasica o un carro.
+
+public abstract class Vehiculo {
 
     public final String placa;
     public final String modelo;
@@ -30,10 +33,17 @@ public class Vehiculo {
     }
 
     //Metodo para identificar el propietario del vehiculo, con un get simple
+    //este solo en caso de que simplemente se necesite saber el propietario de determinado vehiculo sin ningun parametro
 
     public Propietario identificarPropietario () {
         return getPropietario();
     }
 
+    //Metodo de parquear un vehiculo
+    //se implementa el metodo ubicar vehiculo, el cual es el que actualiza los datos del parqueo
+
+    public boolean parquear(Parqueadero parqueadero, Puesto puesto) {
+        return parqueadero.ubicarVehiculo(this, puesto);
+    }
     
 }

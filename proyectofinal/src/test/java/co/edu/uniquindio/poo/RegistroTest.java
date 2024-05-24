@@ -8,6 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.Duration;
 
+//comando para ejecutar un test: mvn -Dtest=NombredeclaseTest#nombredemetodoTest test
+//comando para ejecutar todos los test de todas las clases: mvn test
+
 public class RegistroTest {
     private static final Logger LOG = Logger.getLogger(AppTest.class.getName());
 
@@ -19,9 +22,9 @@ public class RegistroTest {
 
         Propietario propietario = new Propietario("Lorenzo", "padilla");
         Vehiculo vehiculo = new MotoHibrida("STG57","Yamaha",propietario,120.5);
-        Registro registro = new Registro(LocalDateTime.of(2024, 5, 10, 10, 00), LocalDateTime.of(2024, 5, 10, 13, 30), vehiculo);
+        RegistroParqueadero registro = new RegistroParqueadero(LocalDateTime.of(2024, 5, 10, 10, 00), LocalDateTime.of(2024, 5, 10, 13, 30), vehiculo);
 
-        // Calcular la duración del estacionamiento (en este caso, 3.5 horas)
+        // Calcular la duración del estacionamiento (en este caso son 3.5 horas)
         Duration duracionEsperada = Duration.ofHours(3).plusMinutes(30);
         Duration duracionCalculada = registro.calcularDuracionEstacionamiento();
 

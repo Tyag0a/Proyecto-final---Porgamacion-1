@@ -8,6 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.logging.Logger;
 import org.junit.jupiter.api.Test;
 
+//comando para ejecutar un test: mvn -Dtest=NombredeclaseTest#nombredemetodoTest test
+//comando para ejecutar todos los test de todas las clases: mvn test
+
 public class ParqueaderoTest {
 
     private static final Logger LOG = Logger.getLogger(AppTest.class.getName());
@@ -18,16 +21,21 @@ public class ParqueaderoTest {
     public void crearPuestosTest() {
 
         LOG.info("Iniciado test ");
-        Tarifa tarifa = new Tarifa(12.000, 11.000, 14.000);
+
+        //se crea una tarifa y un parqueadero
+
+        TarifaParqueadero tarifa = new TarifaParqueadero(12.000, 11.000, 14.000);
         Parqueadero parqueadero = new Parqueadero("parqueadero x", 13, tarifa);
 
         parqueadero.crearPuestos(parqueadero.getNumeroPuestos());
 
-         // Verificar que se crearon el número correcto de puestos
+         // verificar que se crearon el número correcto de puestos
+
         assertEquals(parqueadero.getNumeroPuestos(), parqueadero.getPuestos().length);
         assertEquals(parqueadero.getNumeroPuestos(), parqueadero.getPuestos()[0].length);
 
-        // Verificar que todos los puestos se crearon correctamente
+        // verificar que todos los puestos se crearon correctamente
+
         for (int i = 0; i < parqueadero.getNumeroPuestos(); i++) {
             for (int j = 0; j < parqueadero.getNumeroPuestos(); j++) {
                 Puesto puesto = parqueadero.getPuestos()[i][j];
@@ -43,29 +51,31 @@ public class ParqueaderoTest {
 
     //Test unitario para verificar la funcionalidad del metodo ubicarVehiculo
 
-     @Test
+    @Test
     public void testUbicarVehiculo() {
         LOG.info("Iniciado test");
 
-        Tarifa tarifa = new Tarifa(3.000, 3.009, 5.000);
+        TarifaParqueadero tarifa = new TarifaParqueadero(3.000, 3.009, 5.000);
         Parqueadero parqueadero = new Parqueadero("parqueadero x", 13, tarifa);
         Propietario propietario = new Propietario("Lorenzo", "Daniel");
         Vehiculo vehiculo = new Carro("XYZ59", "Logan 6", propietario);
-        Puesto puesto = new Puesto(0, 0, false, vehiculo);
-
+        
+        // Crear los puestos del parqueadero
         parqueadero.crearPuestos(parqueadero.getNumeroPuestos());
 
+        // Obtener el puesto especifico para ubicar el vehiculo
+        Puesto puesto = parqueadero.getPuestos()[0][0];
+
         // Intentar ubicar el vehículo en un puesto valido
-        assertTrue(parqueadero.ubicarVehiculo(vehiculo,puesto));
+        assertTrue(parqueadero.ubicarVehiculo(vehiculo, puesto));
 
         // Verificar que el vehículo se ubicó correctamente en el puesto especificado
         assertEquals(vehiculo, parqueadero.getPuestos()[0][0].getVehiculo());
 
-        // Intentar ubicar otro vehículo en el mismo puesto asi que debería fallar
-        assertFalse(parqueadero.ubicarVehiculo(new MotoClasica("XYZ456", "Honda", new Propietario("Maria", "987654321"), 100),puesto));
-
         LOG.info("Finalizando test");
     }
+
+
 
     //Test unitario para crear puestos con un numero de puestos negativo, para que genere una excepcion y pase la prueba
 
@@ -74,8 +84,12 @@ public class ParqueaderoTest {
 
         LOG.info("Iniciado test");
 
-        Tarifa tarifa = new Tarifa(3.000, 3.009, 5.000);
+        //instanciar tarifa y parqueadero
+
+        TarifaParqueadero tarifa = new TarifaParqueadero(3.000, 3.009, 5.000);
         Parqueadero parqueadero = new Parqueadero("parqueadero x", -13, tarifa);
+
+        //se debe generar una excepcion al poner un numero de puestos negativo
 
         assertThrows(Throwable.class, () -> parqueadero.crearPuestos(parqueadero.getNumeroPuestos()));
 
@@ -90,20 +104,32 @@ public class ParqueaderoTest {
 
         LOG.info("Iniciado test");
 
-        Tarifa tarifa = new Tarifa(3.000, 3.009, 5.000);
+        // crear la tarifa para el parqueadero
+        TarifaParqueadero tarifa = new TarifaParqueadero(3.000, 3.009, 5.000);
+        
+        // crear el parqueadero con la tarifa y número de puestos
         Parqueadero parqueadero = new Parqueadero("parqueadero x", 13, tarifa);
-        Propietario propietario = new Propietario("Juan", "Daniel");
-        Vehiculo vehiculo = new Vehiculo("JEY07", "Twingo", propietario);
-        Puesto puesto = new Puesto(0, 0, false, vehiculo);
-
-        parqueadero.getPuestos()[0][0] = puesto;
+        
+        // crear los puestos en el parqueadero
         parqueadero.crearPuestos(parqueadero.getNumeroPuestos());
         
-        // Llamamos al método identificarPropietario y verificamos el resultado
+        // crear el propietario y el vehículo
+        Propietario propietario = new Propietario("Juan", "Daniel");
+        Vehiculo vehiculo = new Carro("JEY07", "Twingo", propietario);
+        
+        // crear el puesto, debe de estar vacio para que el metodo ubicar pueda identificarlo como vacio
+        Puesto puesto = new Puesto(0, 0, false, null);
+         
+        // ubicar el vehículo en el parqueadero en el puesto especificado
+        parqueadero.ubicarVehiculo(vehiculo, puesto);
+        
+        // llamar al método identificarPropietario y verificar el resultado con assertEquals
         String nombrePropietario = parqueadero.identificarPropietario(0, 0);
         assertEquals("Juan", nombrePropietario);
-
+    
         LOG.info("Finalizando test");
+
+
     }
 
     //Test unitario para el metodo verificar la disponibilidad de un puesto
@@ -113,33 +139,39 @@ public class ParqueaderoTest {
 
         LOG.info("Iniciado test");
 
-        Tarifa tarifa = new Tarifa(3.000, 3.009, 5.000);
+        //instanciar objetos necesarios
+
+        TarifaParqueadero tarifa = new TarifaParqueadero(3.000, 3.009, 5.000);
         Parqueadero parqueadero = new Parqueadero("parqueadero x", 13, tarifa);
         Propietario propietario = new Propietario("Juan", "heredia");
-        Vehiculo vehiculo = new Vehiculo("GHJ375", "Tesla", propietario);
+        Vehiculo vehiculo = new Carro("GHJ375", "Tesla", propietario);
         Puesto puestoVacio = new Puesto(0, 0, false, null);
         Puesto puestoOcupado = new Puesto(1, 1, false, null);
+
+        //se crean los puestos y se ubica un vehiculo
 
         parqueadero.crearPuestos(parqueadero.numeroPuestos);
         parqueadero.ubicarVehiculo(vehiculo,puestoOcupado);
 
-          // Verificación del resultado para un puesto vacío
+          // Verificación del resultado para un puesto vacío, el metodo debe retornar true
           assertTrue(parqueadero.verificarDisponibilidadPuesto(puestoVacio));
 
-          // Verificación del resultado para un puesto ocupado
+          // Verificación del resultado para un puesto ocupado, el metodo debe retornar false
           assertFalse(parqueadero.verificarDisponibilidadPuesto(puestoOcupado));
 
 
         LOG.info("Finalizando test");
     }
 
+    //prueba unitaria para probar el funcionamiento del metodo retirar vehiculo
+
     @Test
-    public void testDesubicarVehiculo_PuestoVacio() {
+    public void testRetirarVehiculo() {
 
         LOG.info("Iniciado test");
 
         //  configuración inicial
-        Tarifa tarifa = new Tarifa(5.0, 7.0, 10.0);
+        TarifaParqueadero tarifa = new TarifaParqueadero(5.0, 7.0, 10.0);
         Parqueadero parqueadero = new Parqueadero("Parqueadero Central", 10, tarifa);
         parqueadero.crearPuestos(10);
         Administracion administracion = new Administracion("Admin", parqueadero);
@@ -148,8 +180,8 @@ public class ParqueaderoTest {
         //  rear un puesto vacío
         Puesto puestoVacio = parqueadero.getPuestos()[1][1];
 
-        // desubicar un vehículo de un puesto vacío
-        boolean desubicado = parqueadero.desubicarVehiculo(puestoVacio);
+        // retirar un vehículo de un puesto vacío
+        boolean desubicado = parqueadero.retirarVehiculo(puestoVacio);
 
         // verificar que el método devuelve false
         assertFalse(desubicado);

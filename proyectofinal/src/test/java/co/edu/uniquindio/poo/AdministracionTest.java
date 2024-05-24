@@ -4,7 +4,9 @@ import java.util.logging.Logger;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.LocalDateTime;
-import java.util.*;
+//comando para ejecutar un test: mvn -Dtest=NombredeclaseTest#nombredemetodoTest test
+//comando para ejecutar todos los test de todas las clases: mvn test
+
 
 public class AdministracionTest {
      private static final Logger LOG = Logger.getLogger(AppTest.class.getName());
@@ -15,38 +17,35 @@ public class AdministracionTest {
     public void testGenerarReporteDiario() {
         LOG.info("Iniciado test");
 
-            // Crear instancia de Parqueadero y agregar registros 
-
-            Propietario propietario1 = new Propietario("Juan", "Perez");
-            Vehiculo vehiculo1 =  new MotoClasica("ABC123", "Honda", propietario1,120.5);
-            Vehiculo vehiculo2 =  new MotoHibrida("XYZ456", "Yamaha", new Propietario("Maria", "Lopez"),77.89);
-            Vehiculo vehiculo3 =  new Carro("DEF789", "Toyota", new Propietario("Pedro", "Gomez"));
-            Vehiculo vehiculo4 = new MotoClasica("JKL321", "Suzuki", new Propietario("Ana", "Martinez"),46.67);
-
-            Parqueadero parqueadero = new Parqueadero("Parqueadero Ejemplo", 20, new Tarifa(100, 150, 200));
-
-            Registro registro1 = new Registro(LocalDateTime.of(2024, 5, 10, 8, 0), null,vehiculo1);
-            Registro registro2 = new Registro(LocalDateTime.of(2024, 5, 10, 9, 0), null, vehiculo2);
-            Registro registro3 = new Registro(LocalDateTime.of(2024, 5, 10, 10, 0), null, vehiculo3);
-            Registro registro4 = new Registro(LocalDateTime.of(2024, 5, 11, 8, 0), null, vehiculo4);
-
-            Collection<Registro> listaRegistros = new ArrayList<>();
+ 
+            // Configuración de prueba
+            TarifaParqueadero tarifa = new TarifaParqueadero(3500, 2000, 3000);
+            Parqueadero parqueadero = new Parqueadero("Parqueadero Central", 10, tarifa);
+            Administracion administracion = new Administracion("juan",parqueadero);
             
-            listaRegistros.add(registro1);
-            listaRegistros.add(registro2);
-            listaRegistros.add(registro3);
-            listaRegistros.add(registro4);
-            parqueadero.getAdministracion().setListaRegistros(listaRegistros);
+            // Agregar la lista de registros a la administración
+            parqueadero.setAdministracion(administracion);
     
-            // Calcular el reporte para la fecha 2024-05-10
-            LocalDateTime fecha = LocalDateTime.of(2024, 5, 10, 0, 0);
-            double[] reporteEsperado = {100, 150, 200}; // El costo de estacionamiento esperado para MotoClasica, MotoHibrida, y Carro
-            double[] reporteDiario = parqueadero.getAdministracion().generarReporteDiario(fecha);
+            // Creación de una fecha específica
+            LocalDateTime fechaIngreso = LocalDateTime.of(2024, 5, 1, 8, 0);
+            LocalDateTime fechaSalida = LocalDateTime.of(2024, 5, 1, 12, 0);
     
-            // Verificar que el reporte generado coincida con el esperado
-            assertEquals(reporteEsperado[0], reporteDiario[0]); // MotoClasica
-            assertEquals(reporteEsperado[1], reporteDiario[1]); // MotoHibrida
-            assertEquals(reporteEsperado[2], reporteDiario[2]); // Carro
+            // Creación de un propietario y un vehículo
+            Propietario propietario = new Propietario("Juan", "Perez");
+            Vehiculo vehiculo = new MotoClasica("ABC123", "ModeloX", propietario,100.4);
+    
+            // Creación de un registro y agregado a la administración
+            RegistroParqueadero registro = new RegistroParqueadero(fechaIngreso, fechaSalida, vehiculo);
+            administracion.agregarRegistro(registro);
+    
+            // Ejecución de la prueba
+            double[] reporteDiario = administracion.generarReporteDiario(LocalDateTime.of(2024, 5, 1,0,0));
+    
+            // Verificación
+            assertEquals(14000, reporteDiario[0], 0.01);
+            assertEquals(0.0, reporteDiario[1], 0.01);
+            assertEquals(0.0, reporteDiario[2], 0.01);
+        
 
 
         LOG.info("Finalizando test");
@@ -58,7 +57,7 @@ public class AdministracionTest {
     public void testGenerarReporteMensual() {
         LOG.info("Iniciado test");
 
-        Tarifa tarifa = new Tarifa(5.0, 7.0, 10.0);
+        TarifaParqueadero tarifa = new TarifaParqueadero(5.0, 7.0, 10.0);
         Parqueadero parqueadero = new Parqueadero("Parqueadero Central", 10, tarifa);
         Administracion administracion = new Administracion("Admin", parqueadero);
         parqueadero.setAdministracion(administracion);
@@ -76,9 +75,9 @@ public class AdministracionTest {
         LocalDateTime inicioMes = LocalDateTime.of(2024, 5, 1, 8, 0);
         LocalDateTime finMes = LocalDateTime.of(2024, 5, 31, 18, 0);
 
-        Registro registroMotoClasica = new Registro(inicioMes, finMes, motoClasica);
-        Registro registroMotoHibrida = new Registro(inicioMes, finMes, motoHibrida);
-        Registro registroCarro = new Registro(inicioMes, finMes, carro);
+        RegistroParqueadero registroMotoClasica = new RegistroParqueadero(inicioMes, finMes, motoClasica);
+        RegistroParqueadero registroMotoHibrida = new RegistroParqueadero(inicioMes, finMes, motoHibrida);
+        RegistroParqueadero registroCarro = new RegistroParqueadero(inicioMes, finMes, carro);
 
         // Agregar registros a la administración
         administracion.agregarRegistro(registroMotoClasica);
@@ -89,9 +88,9 @@ public class AdministracionTest {
         double recaudoMensual = administracion.generarReporteMensual(5, 2024);
 
         // Calcular el recaudo esperado
-        double expectedRecaudo = (tarifa.calcularCostoEstacionamientoMotoClasica(registroMotoClasica) + 
-                                   tarifa.calcularCostoEstacionamientoMotoHibrida(registroMotoHibrida) + 
-                                   tarifa.calcularCostoEstacionamientoCarro(registroCarro));
+        double expectedRecaudo = (tarifa.calcularCostoTotalEstacionamiento(registroMotoClasica) + 
+                                   tarifa.calcularCostoTotalEstacionamiento(registroMotoHibrida) + 
+                                   tarifa.calcularCostoTotalEstacionamiento(registroCarro));
 
         // Verificar que el recaudo mensual sea el esperado
         assertEquals(expectedRecaudo, recaudoMensual, 0.001);

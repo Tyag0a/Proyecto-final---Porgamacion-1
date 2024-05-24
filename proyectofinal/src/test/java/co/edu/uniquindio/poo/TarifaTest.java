@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.Duration;
 
+//comando para ejecutar un test: mvn -Dtest=NombredeclaseTest#nombredemetodoTest test
+//comando para ejecutar todos los test de todas las clases: mvn test
+
 public class TarifaTest {
 
     private static final Logger LOG = Logger.getLogger(AppTest.class.getName());
@@ -20,17 +23,17 @@ public class TarifaTest {
 
         Propietario propietario = new Propietario("Lorenzo", "padilla");
         Vehiculo vehiculo = new MotoHibrida("STG57","Yamaha",propietario,120.5);
-        Registro registro = new Registro(LocalDateTime.of(2024, 5, 10, 13, 30), LocalDateTime.of(2024, 5, 10, 15, 30), vehiculo);
+        RegistroParqueadero registro = new RegistroParqueadero(LocalDateTime.of(2024, 5, 10, 13, 30), LocalDateTime.of(2024, 5, 10, 15, 30), vehiculo);
 
          // Calcular la duración del estacionamiento (en este caso  2 horas)
          Duration duracion = Duration.between(registro.getRegistroIngreso(), registro.getRegistroSalida());
 
          // Calcular el costo del estacionamiento de acuerdo a la tarifa por hora de la moto híbrida (supongamos 2.5 por hora)
-         Tarifa tarifa = new Tarifa(2.4, 2.5, 5.2);
+         TarifaParqueadero tarifa = new TarifaParqueadero(2.4, 2.5, 5.2);
          long horas = duracion.toHours();
          double costoEsperado = tarifa.getTarifaMtHibrida() * horas;
 
-         double costoCalculado = tarifa.calcularCostoEstacionamientoMotoHibrida(registro);
+         double costoCalculado = tarifa.calcularCostoTotalEstacionamiento(registro);
 
          // Verificar si el costo calculado es igual al costo esperado
         assertEquals(costoEsperado, costoCalculado, 0.001);
