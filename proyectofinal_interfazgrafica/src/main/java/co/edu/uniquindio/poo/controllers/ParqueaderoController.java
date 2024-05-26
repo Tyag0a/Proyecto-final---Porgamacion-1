@@ -34,9 +34,9 @@ public class ParqueaderoController {
     private TextField numPuestosTextField;
 
 
-/*
-*  Acción del boton toventana2
-*/
+    /*
+    *  Acción del boton toventana2
+    */
     @FXML
     void toVentana2() throws IOException {
         
@@ -117,7 +117,7 @@ public class ParqueaderoController {
     }
 
     /*
-    *  Metodo para mostrar una alerta
+    *  Metodo para mostrar una alerta cuando se ingresen campos vacios
     */
 
     private void mostrarAlertaError() {

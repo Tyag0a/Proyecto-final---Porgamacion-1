@@ -34,7 +34,7 @@
       </Label>
       <Separator layoutX="-6.0" layoutY="47.0" prefHeight="3.0" prefWidth="770.0" />
       <Separator layoutX="314.0" layoutY="48.0" orientation="VERTICAL" prefHeight="27.0" prefWidth="9.0" />
-      <Label layoutX="462.0" layoutY="50.0" text="Establecer Tarifas">
+      <Label layoutX="462.0" layoutY="50.0" text="Establecer Tarifas (Por hora)">
          <font>
             <Font name="Berlin Sans FB" size="14.0" />
          </font>
