@@ -34,23 +34,30 @@ public class ParqueaderoController {
     private TextField numPuestosTextField;
 
 
-   //accion del boton toventana2
-   
+/*
+*  Acción del boton toventana2
+*/
     @FXML
     void toVentana2() throws IOException {
-        // Verificar que los campos no estén vacíos
-        if (nombreAdmin.getText().isEmpty() || nombreTextField.getText().isEmpty() || numPuestosTextField.getText().isEmpty()) {
-            mostrarAlertaError();
-        return;
+        
+    /*
+     *  Verificar que los campos no estén vacíos
+     */
+    if (nombreAdmin.getText().isEmpty() || nombreTextField.getText().isEmpty() || numPuestosTextField.getText().isEmpty()) {
+     mostrarAlertaError();
+    return;
          }
 
-        // Obtener el valor ingresado en numPuestosTextField y guadarlo en el modelo
-
-        String numPuestos = numPuestosTextField.getText();
-        Model.getInstance().setNumPuestos(numPuestos);
-
-        // Carga la segunda ventana
-        App.setRoot("viewVehiculo");
+    /*
+     *  Obtener el valor ingresado en numPuestosTextField y guadarlo en el modelo
+    */
+    String numPuestos = numPuestosTextField.getText();
+    Model.getInstance().setNumPuestos(numPuestos);
+    
+    /*
+     *  Carga la segunda ventana
+    */
+    App.setRoot("viewVehiculo");
 
     }
 
@@ -61,7 +68,9 @@ public class ParqueaderoController {
         assert nombreTextField != null : "fx:id=\"nombreTextField\" was not injected: check your FXML file 'viewParqueadero.fxml'.";
         assert numPuestosTextField != null : "fx:id=\"numPuestosTextField\" was not injected: check your FXML file 'viewParqueadero.fxml'.";
 
-        // Restricción para permitir solo letras en nombreAdmin y nombreTextField
+        /*
+        *  Restricción para permitir solo letras en nombreAdmin y nombreTextField
+        */
 
         UnaryOperator<TextFormatter.Change> lettersOnlyFilter = change -> {
             String newText = change.getControlNewText();
@@ -76,8 +85,9 @@ public class ParqueaderoController {
         nombreAdmin.setTextFormatter(new TextFormatter<>(lettersOnlyFilter));
         nombreTextField.setTextFormatter(new TextFormatter<>(lettersOnlyFilter));
 
-        // Restricción para permitir solo números enteros en numPuestosTextField
-
+        /*
+        *  Restricción para permitir solo números enteros en numPuestosTextField
+        */
         UnaryOperator<TextFormatter.Change> integerOnlyFilter = change -> {
         String newText = change.getControlNewText();
         if (newText.matches("\\d*")) {
@@ -94,7 +104,9 @@ public class ParqueaderoController {
 
     }
 
-    // Método para mostrar una alerta
+    /*
+    *  Metodo para mostrar una alerta
+    */
 
     private void mostrarAlerta(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -104,7 +116,9 @@ public class ParqueaderoController {
         alert.showAndWait();
     }
 
-    //Metodo para mostrar una alerta si se ingresan campos vacios
+    /*
+    *  Metodo para mostrar una alerta
+    */
 
     private void mostrarAlertaError() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -114,8 +128,4 @@ public class ParqueaderoController {
         alert.showAndWait();
     
     }
-
-
-
 }
-
