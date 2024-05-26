@@ -3,6 +3,8 @@ package co.edu.uniquindio.poo;
 import java.time.LocalDateTime;
 import java.time.Duration;
 
+//clase especialmente para facilitar algunas funcionalidades del parqueadero y tener un codigo mas legible
+
 public class RegistroParqueadero {
 
     public LocalDateTime registroIngreso;
@@ -14,6 +16,8 @@ public class RegistroParqueadero {
         this.registroSalida = registroSalida;
         this.vehiculoRegistrado = vehiculoRegistrado;
     }
+
+    //gets y sets
 
     public LocalDateTime getRegistroIngreso() {
         return registroIngreso;
@@ -51,6 +55,8 @@ public class RegistroParqueadero {
             return Duration.ZERO;
         }
     }
+
+    //metodo para registrar la hora actual de salida de un vehiculo
 
     public void registrarHoraSalida(){
 

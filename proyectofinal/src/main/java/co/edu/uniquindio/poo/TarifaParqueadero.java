@@ -2,6 +2,8 @@ package co.edu.uniquindio.poo;
 
 import java.time.Duration;
 
+//clase especialmente para facilitar algunas funcionalidades del parqueadero y tener un codigo mas legible
+
 public class TarifaParqueadero {
 
     public TarifaParqueadero(double tarifaMtClasica, double tarifaMtHibrida, double tarifaCarro) {
@@ -12,6 +14,8 @@ public class TarifaParqueadero {
     public double tarifaMtClasica;
     public double tarifaMtHibrida;
     public double tarifaCarro;
+
+    //gets y sets
 
     
     public double getTarifaMtClasica() {

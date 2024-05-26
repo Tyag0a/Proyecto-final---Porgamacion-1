@@ -24,6 +24,8 @@ public class Parqueadero {
     
     }
 
+    //gets y sets
+
     public String getNombre() {
         return nombre;
     }
@@ -87,7 +89,7 @@ public class Parqueadero {
     //Metodo para crear el numero de puestos, vacios y con su estado de ocupado false
 
     public void crearPuestos(int numeroPuestos) {
-        assert numeroPuestos > 0;
+        assert numeroPuestos > 0; //assert para prueba unitaria
         puestos = new Puesto[numeroPuestos][numeroPuestos];
         for (int i = 0; i < numeroPuestos; i++) {
             for (int j = 0; j < numeroPuestos; j++) {

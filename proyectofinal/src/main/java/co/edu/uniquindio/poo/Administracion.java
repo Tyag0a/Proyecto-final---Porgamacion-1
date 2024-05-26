@@ -17,7 +17,8 @@ public class Administracion {
     Collection<RegistroParqueadero> listaRegistros; //Esta coleccion incluye el historico de vehiculos parqueados, por lo cual no se le pueden eliminar elementos
     public final Parqueadero parqueadero;
 
-    
+    //gets y sets 
+
     public String getAdministrador() {
         return administrador;
     }
@@ -62,11 +63,15 @@ public class Administracion {
         TarifaParqueadero tarifa = parqueadero.getTarifa();
 
         for (RegistroParqueadero registro : listaRegistros) {
+
             // Verificar si el registro corresponde a la fecha especificada
+
             LocalDate fechaRegistro = registro.getRegistroIngreso().toLocalDate();
             if (fechaRegistro.equals(fecha.toLocalDate())) {
+
                 // Calcular costo de estacionamiento para este registro
-                if (registro.getVehiculoRegistrado() instanceof MotoClasica) {
+
+                if (registro.getVehiculoRegistrado() instanceof MotoClasica) { //se utiliza el instanceOf para filtrar los tipos
                     reporteDiario[0] += tarifa.calcularCostoTotalEstacionamiento(registro);
                 } else if (registro.getVehiculoRegistrado() instanceof MotoHibrida) {
                     reporteDiario[1] += tarifa.calcularCostoTotalEstacionamiento(registro);
@@ -84,11 +89,11 @@ public class Administracion {
     //Al no necesitar generar un reporte por tipo de vehiculo, se puede retornar una sola variable double
 
     public double generarReporteMensual(int mes, int año) {
-        double RecaudoMensual = 0.0;
+        double RecaudoMensual = 0.0; //declarar variable que se retornara 
 
-        for (RegistroParqueadero registro : listaRegistros) {
+        for (RegistroParqueadero registro : listaRegistros) { //recorrer lista de registros
             LocalDate fechaRegistro = registro.getRegistroIngreso().toLocalDate();
-            if (fechaRegistro.getMonthValue() == mes && fechaRegistro.getYear() == año) {
+            if (fechaRegistro.getMonthValue() == mes && fechaRegistro.getYear() == año) { //condicion para filtrar los registros de ese mes y año
                 if (registro.getVehiculoRegistrado() instanceof MotoClasica) {
                     RecaudoMensual += parqueadero.tarifa.calcularCostoTotalEstacionamiento(registro);
                 } else if (registro.getVehiculoRegistrado() instanceof MotoHibrida) {
@@ -101,6 +106,8 @@ public class Administracion {
 
         return RecaudoMensual;
     }
+
+    //metodo para agregar un registro
 
     public void agregarRegistro(RegistroParqueadero registro) {
         listaRegistros.add(registro);

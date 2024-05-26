@@ -8,7 +8,7 @@ public class Puesto {
     public Vehiculo vehiculo;
 
     public Puesto(int i, int j, boolean ocupado, Vehiculo vehiculo) {
-        this.posicion = new Point(i,j);
+        this.posicion = new Point(i,j); //point es un tipo de dato para puntos bidimensionales, de dos coordenadas
         this.ocupado = ocupado;
         this.vehiculo = vehiculo;
     }
@@ -58,7 +58,7 @@ public class Puesto {
     //Metodo para ocupar el puesto
 
     public void ocuparPuesto ( Vehiculo vehiculo) {
-        if (this.vehiculo == null) {
+        if (this.vehiculo == null) { //se verifica que el puesto no tenga un vehiculo ubicado en el
             this.vehiculo = vehiculo;
             setVehiculo(vehiculo);
         }

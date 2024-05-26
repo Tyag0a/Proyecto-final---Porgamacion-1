@@ -3,6 +3,8 @@ package co.edu.uniquindio.poo;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
+//clase principal y main donde se implementan todos los metodos creados
+
 public class App {
 
         public static void main(String[] args) {
